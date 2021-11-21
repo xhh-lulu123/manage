@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改brand')" />
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-brand-edit" th:object="${tbBrand}">
+        <input name="id" th:field="*{id}" type="hidden">
+        <input name="shelvesId"  type="hidden"  th:field="*{shelvesId}" id="treeId"/>
+<!--        <div class="form-group">-->
+<!--            <label class="col-sm-3 control-label" style=" display: none">id：</label>-->
+<!--            <div class="col-sm-8">-->
+<!--                <input name="categoryId" class="form-control" type="hidden">-->
+<!--            </div>-->
+<!--        </div>-->
+        <div class="form-group">
+            <label class="col-sm-3 control-label">类别名称：</label>
+<!--            <input name="categoryName" th:field="*{categoryName}" type="text">-->
+            <div class="col-sm-8">
+                <select name="categoryId" class="form-control" th:with="type=${@categoryService.selectTbCategoryList(null)}" >
+                    <option th:each="category : ${type}" th:text="${category.name}" th:value="${category.id}" th:selected = "${category.id eq nowid}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">名称：</label>
+            <div class="col-sm-8">
+                <input name="name" th:field="*{name}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">单位：</label>
+            <div class="col-sm-8">
+                <input name="unit" th:field="*{unit}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">位置名称：</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input class="form-control" name="shelvesName" onclick="selectShelvesTree()" id="treeName" type="text" th:field="*{shelvesName}">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">总数：</label>
+            <div class="col-sm-8">
+                <input name="total" th:field="*{total}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">流水总数：</label>
+            <div class="col-sm-8">
+                <input name="inout" th:field="*{inout}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">剩余总数：</label>
+            <div class="col-sm-8">
+                <input name="surplus" th:field="*{surplus}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-8">
+                <textarea name="remark" class="form-control">[[*{remark}]]</textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer" />
+<script th:inline="javascript">
+    var prefix = ctx + "project/brand";
+    $("#form-brand-edit").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-brand-edit').serialize());
+        }
+    }
+    /* 用户管理-新增-选择部门树 */
+    function selectShelvesTree() {
+        var treeId = $("#treeId").val();
+        var shelvesId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+        var url = ctx + "project/shelves/selectShelvesTree/" + shelvesId;
+        var options = {
+            title: '选择位置',
+            width: "380",
+            url: url,
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+    function doSubmit(index, layero){
+        var body = $.modal.getChildFrame(index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        $.modal.close(index);
+    }
+</script>
+</body>
+</html>

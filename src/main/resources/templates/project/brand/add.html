@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增商品')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-brand-add">
+            <h4 class="form-header h4">商品信息</h4>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">类别名称：</label>
+<!--                <input id="user" name="user" th:field="*{user}" type="hidden">-->
+                    <div class="col-sm-8">
+                        <select name="categoryId" class="form-control" th:with="type=${@categoryService.selectTbCategoryList(null)}" >
+                            <option value="">请选择类别</option>
+                            <option th:each="category : ${type}" th:text="${category.name}" th:value="${category.id}"></option>
+                        </select>
+                    </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">名称：</label>
+                <div class="col-sm-8">
+                    <input name="name" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">单位：</label>
+                <div class="col-sm-8">
+                    <input name="unit" class="form-control" type="text">
+                </div>
+            </div>
+            <input name="shelvesId" type="hidden" id="treeId"/>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">位置名称：</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input name="shelvesName" onclick="selectShelvesTree()" id="treeName" type="text" placeholder="请选择存放位置" class="form-control">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">总数：</label>
+                <div class="col-sm-8">
+                    <input name="total" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">流水总数：</label>
+                <div class="col-sm-8">
+                    <input name="inout" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">剩余总数：</label>
+                <div class="col-sm-8">
+                    <input name="surplus" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-8">
+                    <textarea name="remark" class="form-control"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "project/brand"
+        $("#form-brand-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-brand-add').serialize());
+            }
+        }
+
+        $(function() {
+            var options = {
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                sidePagination: "client",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'index',
+                    align: 'center',
+                    title: "序号",
+                    formatter: function (value, row, index) {
+                    	var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    	return columnIndex + $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field: 'name',
+                    align: 'center',
+                    title: '名称',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='tbCategoryList[%s].name' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'total',
+                    align: 'center',
+                    title: '总数',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='tbCategoryList[%s].total' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'inout',
+                    align: 'center',
+                    title: '流水总数',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='tbCategoryList[%s].inout' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'surplus',
+                    align: 'center',
+                    title: '剩余总数',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='tbCategoryList[%s].surplus' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'createBy',
+                    align: 'center',
+                    title: '创建者',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='tbCategoryList[%s].createBy' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'createTime',
+                    align: 'center',
+                    title: '创建时间',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='tbCategoryList[%s].createTime' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'updateBy',
+                    align: 'center',
+                    title: '更新者',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='tbCategoryList[%s].updateBy' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'updateTime',
+                    align: 'center',
+                    title: '更新时间',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='tbCategoryList[%s].updateTime' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+                {
+                    field: 'remark',
+                    align: 'center',
+                    title: '备注',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='tbCategoryList[%s].remark' value='%s'>", index, value);
+                        return html;
+                    }
+                
+                }]
+            };
+            $.table.init(options);
+        });
+
+        /* 用户管理-新增-选择部门树 */
+        function selectShelvesTree() {
+            var treeId = $("#treeId").val();
+            var shelvesId = $.common.isEmpty(treeId) ? "100" : $("#treeId").val();
+            var url = ctx + "project/shelves/selectShelvesTree/" + shelvesId;
+            var options = {
+                title: '选择位置',
+                width: "380",
+                url: url,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+        function doSubmit(index, layero){
+            var body = $.modal.getChildFrame(index);
+            $("#treeId").val(body.find('#treeId').val());
+            $("#treeName").val(body.find('#treeName').val());
+            $.modal.close(index);
+        }
+        function addColumn() {
+            var count = $("#" + table.options.id).bootstrapTable('getData').length;
+            sub.editColumn();
+        	
+            $("#" + table.options.id).bootstrapTable('insertRow', {
+                index: count,
+                row: {
+                    index: $.table.serialNumber(count),
+                    name: "",
+                    total: "",
+                    inout: "",
+                    surplus: "",
+                    createBy: "",
+                    createTime: "",
+                    updateBy: "",
+                    updateTime: "",
+                    remark: ""
+                }
+            });
+        }
+    </script>
+</body>
+</html>

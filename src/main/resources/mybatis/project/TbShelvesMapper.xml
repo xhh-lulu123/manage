@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.shelves.mapper.TbShelvesMapper">
+    
+    <resultMap type="TbShelves" id="TbShelvesResult">
+        <result property="id"    column="id"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="ancestors"    column="ancestors"    />
+        <result property="name"    column="name"    />
+        <result property="orderNum"    column="order_num"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="parentName" column="parent_name" />
+    </resultMap>
+
+    <sql id="selectTbShelvesVo">
+        select id, parent_id, ancestors, name, order_num, status, create_by, create_time, update_by, update_time from tb_shelves
+    </sql>
+
+    <select id="selectTbShelvesList" parameterType="TbShelves" resultMap="TbShelvesResult">
+        <include refid="selectTbShelvesVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by parent_id
+    </select>
+    
+    <select id="selectTbShelvesById" parameterType="Long" resultMap="TbShelvesResult">
+        select t.id, t.parent_id, t.ancestors, t.name, t.order_num, t.status, t.create_by, t.create_time, t.update_by, t.update_time, p.name as parent_name
+        from tb_shelves t
+        left join tb_shelves p on p.id = t.parent_id
+        where t.id = #{id}
+    </select>
+        
+    <insert id="insertTbShelves" parameterType="TbShelves" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_shelves
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="ancestors != null">ancestors,</if>
+            <if test="name != null">name,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="ancestors != null">#{ancestors},</if>
+            <if test="name != null">#{name},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbShelves" parameterType="TbShelves">
+        update tb_shelves
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="ancestors != null">ancestors = #{ancestors},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbShelvesById" parameterType="Long">
+        delete from tb_shelves where id = #{id}
+    </delete>
+
+    <delete id="deleteTbShelvesByIds" parameterType="String">
+        delete from tb_shelves where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

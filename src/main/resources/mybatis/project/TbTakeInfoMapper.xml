@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.takeInfo.mapper.TbTakeInfoMapper">
+    
+    <resultMap type="TbTakeInfo" id="TbTakeInfoResult">
+        <result property="id"    column="id"    />
+        <result property="brandId"    column="brand_id"    />
+        <result property="takeBy"    column="take_by"    />
+        <result property="takeTime"    column="take_time"    />
+        <result property="takeNum"    column="take_num"    />
+        <result property="takeTo"    column="take_to"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTbTakeInfoVo">
+        select id, brand_id, take_by, take_time, take_num, take_to, create_by, create_time, update_by, update_time, remark from tb_take_info
+    </sql>
+
+    <select id="selectTbTakeInfoList" parameterType="TbTakeInfo" resultMap="TbTakeInfoResult">
+        select ti.id, ti.brand_id, ti.take_by, ti.take_time, ti.take_num, ti.take_to,
+        ti.create_by, ti.create_time, ti.update_by, ti.update_time, ti.remark,
+        tb.name brand_name,tb.unit, ts.name shelves_name,tc.name category_name
+        from tb_take_info ti
+        left join tb_brand tb on tb.id = ti.brand_id
+        left join tb_shelves ts on ts.id = tb.shelves_id
+        left join tb_category tc on tc.id = tb.category_id
+        <where>  
+            <if test="takeBy != null  and takeBy != ''"> and take_by like concat('%', #{takeBy}, '%')</if>
+            <if test="takeTime != null "> and take_time = #{takeTime}</if>
+            <if test="takeNum != null "> and take_num = #{takeNum}</if>
+            <if test="takeTo != null  and takeTo != ''"> and take_to like concat('%', #{takeTo}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTbTakeInfoById" parameterType="String" resultMap="TbTakeInfoResult">
+        <include refid="selectTbTakeInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTbTakeInfo" parameterType="TbTakeInfo">
+        insert into tb_take_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="brandId != null">brand_id,</if>
+            <if test="takeBy != null">take_by,</if>
+            <if test="takeTime != null">take_time,</if>
+            <if test="takeNum != null">take_num,</if>
+            <if test="takeTo != null">take_to,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="brandId != null">#{brandId},</if>
+            <if test="takeBy != null">#{takeBy},</if>
+            <if test="takeTime != null">#{takeTime},</if>
+            <if test="takeNum != null">#{takeNum},</if>
+            <if test="takeTo != null">#{takeTo},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbTakeInfo" parameterType="TbTakeInfo">
+        update tb_take_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandId != null">brand_id = #{brandId},</if>
+            <if test="takeBy != null">take_by = #{takeBy},</if>
+            <if test="takeTime != null">take_time = #{takeTime},</if>
+            <if test="takeNum != null">take_num = #{takeNum},</if>
+            <if test="takeTo != null">take_to = #{takeTo},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbTakeInfoById" parameterType="String">
+        delete from tb_take_info where id = #{id}
+    </delete>
+
+    <delete id="deleteTbTakeInfoByIds" parameterType="String">
+        delete from tb_take_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

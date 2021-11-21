@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.brand.mapper.TbBrandMapper">
+    
+    <resultMap type="TbBrand" id="TbBrandResult">
+        <result property="id"    column="id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="name"    column="name"    />
+        <result property="unit"    column="unit"    />
+        <result property="shelvesId"    column="shelves_id"    />
+        <result property="shelvesName"    column="shelves_name"    />
+        <result property="total"    column="total"    />
+        <result property="inout"    column="inout"    />
+        <result property="surplus"    column="surplus"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+
+    <sql id="selectTbBrandVo">
+        select id, category_id, category_name, name, unit, shelves_id, shelves_name, total, `inout`, surplus, create_by, create_time, update_by, update_time, remark from tb_brand
+    </sql>
+
+    <select id="selectTbBrandList" parameterType="TbBrand" resultMap="TbBrandResult">
+        select tb.id, tb.category_id, tc.name category_name, tb.name, tb.unit, tb.shelves_id, ts.name shelves_name, tb.total, tb.`inout`,
+        tb.surplus, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.remark from tb_brand tb
+        left join tb_category tc on tc.id = tb.category_id
+        left join tb_shelves ts on ts.id = tb.shelves_id
+        <where>
+            <if test="categoryName != null  and categoryName != ''"> and tc.name = #{categoryName}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="shelvesId != null and shelvesId !=0">
+              AND (tb.shelves_id = #{shelvesId} OR tb.shelves_id IN ( SELECT t.id FROM tb_shelves t WHERE FIND_IN_SET (#{shelvesId},ancestors) ))
+            </if>
+            <if test="total != null "> and total = #{total}</if>
+            <if test="inout != null "> and inout = #{inout}</if>
+            <if test="surplus != null "> and surplus = #{surplus}</if>
+            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectTbBrandById" parameterType="String" resultMap="TbBrandResult">
+       select tb.id, tb.category_id, tc.name category_name, tb.name, tb.unit, tb.shelves_id, ts.name shelves_name, tb.total, tb.`inout`,
+        tb.surplus, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.remark from tb_brand tb
+        left join tb_category tc on tc.id = tb.category_id
+        left join tb_shelves ts on ts.id = tb.shelves_id where tb.id = #{id}
+    </select>
+        
+    <insert id="insertTbBrand" parameterType="TbBrand">
+        insert into tb_brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="categoryName != null">category_name,</if>
+            <if test="name != null">name,</if>
+            <if test="unit != null">unit,</if>
+            <if test="shelvesId != null">shelves_id,</if>
+            <if test="shelvesName != null">shelves_name,</if>
+            <if test="total != null">total,</if>
+            <if test="inout != null">`inout`,</if>
+            <if test="surplus != null">surplus,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="categoryName != null">#{categoryName},</if>
+            <if test="name != null">#{name},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="shelvesId != null">#{shelvesId},</if>
+            <if test="shelvesName != null">#{shelvesName},</if>
+            <if test="total != null">#{total},</if>
+            <if test="inout != null">#{inout},</if>
+            <if test="surplus != null">#{surplus},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbBrand" parameterType="TbBrand">
+        update tb_brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="categoryName != null">category_name = #{categoryName},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="shelvesId != null">shelves_id = #{shelvesId},</if>
+            <if test="shelvesName != null">shelves_name = #{shelvesName},</if>
+            <if test="total != null">total = #{total},</if>
+            <if test="inout != null">`inout` = #{inout},</if>
+            <if test="surplus != null">surplus = #{surplus},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbBrandById" parameterType="String">
+        delete from tb_brand where id = #{id}
+    </delete>
+
+    <delete id="deleteTbBrandByIds" parameterType="String">
+        delete from tb_brand where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+</mapper>
