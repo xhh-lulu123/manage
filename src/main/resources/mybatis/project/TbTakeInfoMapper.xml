@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectTbTakeInfoList" parameterType="TbTakeInfo" resultMap="TbTakeInfoResult">
         select ti.id, ti.brand_id, ti.take_by, ti.take_time, ti.take_num, ti.take_to,
         ti.create_by, ti.create_time, ti.update_by, ti.update_time, ti.remark,
-        tb.name brand_name,tb.unit, ts.name shelves_name,tc.name category_name
+        tb.name brand_name,tb.unit,tb.shelves_id, ts.name shelves_name,tc.name category_name
         from tb_take_info ti
         left join tb_brand tb on tb.id = ti.brand_id
         left join tb_shelves ts on ts.id = tb.shelves_id
@@ -35,12 +35,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="takeTime != null "> and take_time = #{takeTime}</if>
             <if test="takeNum != null "> and take_num = #{takeNum}</if>
             <if test="takeTo != null  and takeTo != ''"> and take_to like concat('%', #{takeTo}, '%')</if>
+            <if test="shelvesId != null and shelvesId !=0">
+                AND (tb.shelves_id = #{shelvesId} OR tb.shelves_id IN ( SELECT t.id FROM tb_shelves t WHERE FIND_IN_SET (#{shelvesId},ancestors) ))
+            </if>
         </where>
     </select>
     
     <select id="selectTbTakeInfoById" parameterType="String" resultMap="TbTakeInfoResult">
-        <include refid="selectTbTakeInfoVo"/>
-        where id = #{id}
+        select ti.id, ti.brand_id, ti.take_by, ti.take_time, ti.take_num, ti.take_to,
+        ti.create_by, ti.create_time, ti.update_by, ti.update_time, ti.remark,
+        tb.name brand_name,tb.unit, ts.name shelves_name,tc.name category_name
+        from tb_take_info ti
+        left join tb_brand tb on tb.id = ti.brand_id
+        left join tb_shelves ts on ts.id = tb.shelves_id
+        left join tb_category tc on tc.id = tb.category_id
+        where ti.id = #{id}
     </select>
         
     <insert id="insertTbTakeInfo" parameterType="TbTakeInfo">

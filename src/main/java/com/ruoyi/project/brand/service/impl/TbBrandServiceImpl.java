@@ -18,7 +18,7 @@ import com.ruoyi.common.utils.text.Convert;
  * @author ruoyi
  * @date 2021-11-21
  */
-@Service
+@Service("brandService")
 public class TbBrandServiceImpl implements ITbBrandService 
 {
     @Autowired
@@ -47,6 +47,20 @@ public class TbBrandServiceImpl implements ITbBrandService
     {
         return tbBrandMapper.selectTbBrandList(tbBrand);
     }
+
+    /**
+     * 查询brand列表
+     *
+     * @param
+     * @return brand
+     */
+    @Override
+    public List<TbBrand> selectTbBrandBy(String name)
+    {   TbBrand tbBrand = new TbBrand();
+    tbBrand.setName(name);
+        return tbBrandMapper.selectTbBrandList(tbBrand);
+    }
+
 
     /**
      * 新增brand

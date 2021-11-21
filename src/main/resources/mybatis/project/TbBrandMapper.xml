@@ -34,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join tb_shelves ts on ts.id = tb.shelves_id
         <where>
             <if test="categoryName != null  and categoryName != ''"> and tc.name = #{categoryName}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="name != null  and name != ''"> and tb.name like concat('%', #{name}, '%')</if>
             <if test="shelvesId != null and shelvesId !=0">
               AND (tb.shelves_id = #{shelvesId} OR tb.shelves_id IN ( SELECT t.id FROM tb_shelves t WHERE FIND_IN_SET (#{shelvesId},ancestors) ))
             </if>

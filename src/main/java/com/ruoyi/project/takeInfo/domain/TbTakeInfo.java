@@ -24,6 +24,10 @@ public class TbTakeInfo extends BaseEntity
     @Excel(name = "")
     private String brandId;
 
+    /**  */
+    @Excel(name = "")
+    private Long shelvesId;
+
     /** 类别名称 */
     @Excel(name = "类别名称")
     private String categoryName;
@@ -57,6 +61,14 @@ public class TbTakeInfo extends BaseEntity
     /** 流向 */
     @Excel(name = "流向")
     private String takeTo;
+
+    public Long getShelvesId() {
+        return shelvesId;
+    }
+
+    public void setShelvesId(Long shelvesId) {
+        this.shelvesId = shelvesId;
+    }
 
     public String getCategoryName() {
         return categoryName;

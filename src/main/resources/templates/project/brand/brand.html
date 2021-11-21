@@ -30,11 +30,12 @@
                         <ul>
                             <li>
                                 <label>类别：</label>
-                                <select name="categoryName" class="form-control" th:with="type=${@categoryService.selectTbCategoryList(null)}" >
+                                <select id="test" name="categoryName" class="form-control" th:with="type=${@categoryService.selectTbCategoryList(null)}" >
                                     <option value="">请选择类别</option>
                                     <option th:each="category : ${type}" th:text="${category.name}" th:value="${category.name}"></option>
                                 </select>
                             </li>
+
                             <li>
                                 <label>名称：</label>
                                 <input type="text" name="name"/>

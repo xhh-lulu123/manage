@@ -2,14 +2,37 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
     <th:block th:include="include :: header('takeInfo列表')" />
+    <th:block th:include="include :: layout-latest-css" />
+    <th:block th:include="include :: ztree-css" />
 </head>
 <body class="gray-bg">
+<div class="ui-layout-west">
+    <div class="box box-main">
+        <div class="box-header">
+            <div class="box-title">
+                <i class="fa icon-grid"></i> 存放位置
+            </div>
+        </div>
+        <div class="ui-layout-content">
+            <div id="tree" class="ztree"></div>
+        </div>
+    </div>
+</div>
+<div class="ui-layout-center">
      <div class="container-div">
         <div class="row">
             <div class="col-sm-12 search-collapse">
                 <form id="formId">
+                    <input type="hidden" id="shelvesId" name="shelvesId">
                     <div class="select-list">
                         <ul>
+                            <li>
+                                <label>类别：</label>
+                                <select name="categoryName" class="form-control" th:with="type=${@categoryService.selectTbCategoryList(null)}" >
+                                    <option value="">请选择类别</option>
+                                    <option th:each="category : ${type}" th:text="${category.name}" th:value="${category.name}"></option>
+                                </select>
+                            </li>
                             <li>
                                 <label>领走人：</label>
                                 <input type="text" name="takeBy"/>
@@ -54,13 +77,34 @@
             </div>
         </div>
     </div>
+</div>
     <th:block th:include="include :: footer" />
+    <th:block th:include="include :: layout-latest-js" />
+    <th:block th:include="include :: ztree-js" />
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('project:takeInfo:edit')}]];
         var removeFlag = [[${@permission.hasPermi('project:takeInfo:remove')}]];
         var prefix = ctx + "project/takeInfo";
 
         $(function() {
+            var panehHidden = false;
+            if ($(this).width() < 769) {
+                panehHidden = true;
+            }
+            $('body').layout({ initClosed: panehHidden, west__size: 185 });
+            // 回到顶部绑定
+            if ($.fn.toTop !== undefined) {
+                var opt = {
+                    win:$('.ui-layout-center'),
+                    doc:$('.ui-layout-center')
+                };
+                $('#scroll-up').toTop(opt);
+            }
+            queryBrandList();
+            queryShelvesTree();
+        });
+
+        function queryBrandList(){
             var options = {
                 url: prefix + "/list",
                 createUrl: prefix + "/add",
@@ -140,7 +184,23 @@
                 }]
             };
             $.table.init(options);
-        });
+        };
+        function queryShelvesTree()
+        {
+            var url = ctx + "project/shelves/treeData";
+            var options = {
+                url: url,
+                expandLevel: 2,
+                onClick : zOnClick
+            };
+            $.tree.init(options);
+
+            function zOnClick(event, shelvesId, treeNode) {
+                $("#shelvesId").val(treeNode.id);
+                $("#parentId").val(treeNode.pId);
+                $.table.search();
+            }
+        }
     </script>
 </body>
 </html>

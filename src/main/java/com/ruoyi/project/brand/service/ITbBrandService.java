@@ -27,6 +27,8 @@ public interface ITbBrandService
      */
     public List<TbBrand> selectTbBrandList(TbBrand tbBrand);
 
+    public List<TbBrand> selectTbBrandBy(String name);
+
     /**
      * 新增brand
      * 
