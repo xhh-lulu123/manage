@@ -48,6 +48,11 @@ public class TbBrandServiceImpl implements ITbBrandService
         return tbBrandMapper.selectTbBrandList(tbBrand);
     }
 
+    @Override
+    public List<TbBrand> selectTbBrandByCategoryId(String categoryId) {
+        return tbBrandMapper.selectTbBrandByCategoryId(categoryId);
+    }
+
     /**
      * 查询brand列表
      *

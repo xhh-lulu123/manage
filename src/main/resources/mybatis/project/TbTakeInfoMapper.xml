@@ -30,9 +30,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join tb_brand tb on tb.id = ti.brand_id
         left join tb_shelves ts on ts.id = tb.shelves_id
         left join tb_category tc on tc.id = tb.category_id
-        <where>  
+        <where>
+            <if test="categoryId != null  and categoryId != ''"> and tb.category_id = #{categoryId}</if>
+            <if test="brandName != null  and brandName != ''"> and tb.name = #{brandName}</if>
             <if test="takeBy != null  and takeBy != ''"> and take_by like concat('%', #{takeBy}, '%')</if>
-            <if test="takeTime != null "> and take_time = #{takeTime}</if>
+            <if test="beginTime != null "> and take_time &gt;= #{beginTime}</if>
+            <if test="endTime != null "> and take_time &lt;= #{endTime}</if>
             <if test="takeNum != null "> and take_num = #{takeNum}</if>
             <if test="takeTo != null  and takeTo != ''"> and take_to like concat('%', #{takeTo}, '%')</if>
             <if test="shelvesId != null and shelvesId !=0">

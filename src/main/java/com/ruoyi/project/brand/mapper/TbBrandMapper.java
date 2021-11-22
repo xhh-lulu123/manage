@@ -27,6 +27,8 @@ public interface TbBrandMapper
      */
     public List<TbBrand> selectTbBrandList(TbBrand tbBrand);
 
+    public List<TbBrand> selectTbBrandByCategoryId(String categoryId);
+
     /**
      * 新增brand
      * 

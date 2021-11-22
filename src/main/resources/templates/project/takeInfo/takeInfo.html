@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('takeInfo列表')" />
-    <th:block th:include="include :: layout-latest-css" />
-    <th:block th:include="include :: ztree-css" />
+    <th:block th:include="include :: header('takeInfo列表')"/>
+    <th:block th:include="include :: layout-latest-css"/>
+    <th:block th:include="include :: ztree-css"/>
 </head>
 <body class="gray-bg">
 <div class="ui-layout-west">
@@ -19,7 +19,7 @@
     </div>
 </div>
 <div class="ui-layout-center">
-     <div class="container-div">
+    <div class="container-div">
         <div class="row">
             <div class="col-sm-12 search-collapse">
                 <form id="formId">
@@ -28,9 +28,23 @@
                         <ul>
                             <li>
                                 <label>类别：</label>
-                                <select name="categoryName" class="form-control" th:with="type=${@categoryService.selectTbCategoryList(null)}" >
-                                    <option value="">请选择类别</option>
-                                    <option th:each="category : ${type}" th:text="${category.name}" th:value="${category.name}"></option>
+                                <select class="select" id="categoryName" name="categoryId" onchange="cplb()">
+                                    <option value="" data-id="0">全部</option>
+                                </select>
+<!--                                <label>类别：</label>-->
+<!--                                &lt;!&ndash;                                <select id = "categoryName1" name="categoryName" class="form-control" th:with="type=${@categoryService.selectTbCategoryList(null)}" >&ndash;&gt;-->
+<!--                                &lt;!&ndash;                                    <option value="">请选择类别</option>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                                    <option th:each="category : ${type}" th:text="${category.name}" th:value="${category.name}"></option>&ndash;&gt;-->
+<!--                                &lt;!&ndash;                                </select>&ndash;&gt;-->
+<!--                                <select class='type form-control' id="categoryName" name='categoryName'-->
+<!--                                        th:attr='data-value=*{categoryName}'>-->
+<!--                                    <option value="">-&#45;&#45;请选择-&#45;&#45;</option>-->
+<!--                                </select>-->
+                            </li>
+                            <li>
+                                <label>类别：</label>
+                                <select class="select" id="projectid" name="brandName">
+                                    <option value="" data-id="0">全部</option>
                                 </select>
                             </li>
                             <li>
@@ -39,7 +53,8 @@
                             </li>
                             <li>
                                 <label>领走时间：</label>
-                                <input type="text" class="time-input" placeholder="请选择领走时间" name="takeTime"/>
+                                <input type="text" class="time-input" placeholder="开始时间" name="beginTime"/> ——
+                                <input type="text" class="time-input" placeholder="结束时间" name="endTime"/>
                             </li>
                             <li>
                                 <label>领走数量：</label>
@@ -50,8 +65,10 @@
                                 <input type="text" name="takeTo"/>
                             </li>
                             <li>
-                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                        class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                        class="fa fa-refresh"></i>&nbsp;重置</a>
                             </li>
                         </ul>
                     </div>
@@ -62,13 +79,16 @@
                 <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="project:takeInfo:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
-                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="project:takeInfo:edit">
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
+                   shiro:hasPermission="project:takeInfo:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
-                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="project:takeInfo:remove">
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
+                   shiro:hasPermission="project:takeInfo:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
-                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="project:takeInfo:export">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()"
+                   shiro:hasPermission="project:takeInfo:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
             </div>
@@ -78,43 +98,95 @@
         </div>
     </div>
 </div>
-    <th:block th:include="include :: footer" />
-    <th:block th:include="include :: layout-latest-js" />
-    <th:block th:include="include :: ztree-js" />
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('project:takeInfo:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('project:takeInfo:remove')}]];
-        var prefix = ctx + "project/takeInfo";
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: layout-latest-js"/>
+<th:block th:include="include :: ztree-js"/>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('project:takeInfo:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('project:takeInfo:remove')}]];
+    var prefix = ctx + "project/takeInfo";
 
-        $(function() {
-            var panehHidden = false;
-            if ($(this).width() < 769) {
-                panehHidden = true;
+    $(function () {
+        var aurl = "category/allList";
+        $.ajax({
+            type: 'POST',//请求方式：post
+            url: aurl,//请求的action路径
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+//请求失败处理函数
+                alert('获取用户信息失败');
+            },
+            success: function (data) {
+                var k = data.data;
+                console.log(k)
+                console.log(data)
+                $("#categoryName").empty();//进入页面首先清空组织机构的下拉列表内容
+                $("#categoryName").append("<option value= '' data-id='0'>全部</option>")//为组织结构先添加一个请选择
+                for (var i = 0; i < k.length; i++) {//循环从后台查出来的数据,逐条填入组织机构的下拉中。
+                    $("#categoryName").append("<option value='" + k[i].id + "' data-id='" + k[i].name + "'>" + k[i].name + "</option>");
+                    // $("#categoryName").append("<option value='" + k[i].id + "' data-id='" + k[i].id + "'>" + k[i].cname + "</option>");
+                }
             }
-            $('body').layout({ initClosed: panehHidden, west__size: 185 });
-            // 回到顶部绑定
-            if ($.fn.toTop !== undefined) {
-                var opt = {
-                    win:$('.ui-layout-center'),
-                    doc:$('.ui-layout-center')
-                };
-                $('#scroll-up').toTop(opt);
-            }
-            queryBrandList();
-            queryShelvesTree();
         });
+    })
 
-        function queryBrandList(){
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
-                exportUrl: prefix + "/export",
-                modalName: "takeInfo",
-                columns: [{
-                    checkbox: true
-                },
+    //改变组织机构的值
+    function cplb() {
+        $("#projectid").empty();//每次修改组织机构的值的时候，清空问卷项目名称的下拉内容
+        $("#projectid").append("<option value= '' data-id='0'>全部</option>")
+        $("#questionselect").empty();//每次修改组织机构的值的时候，清空问题选择的下拉内容
+        $("#questionselect").append("<option value= '' data-id='0'>全部</option>")
+        var categoryId = $("#categoryName").val();
+        var aurl = "brand/listByCategoryId";
+        $.ajax({
+            type: 'POST',//请求方式：post
+            url: aurl,//请求的action路径
+            data: {categoryId:categoryId},
+            dataType: 'json',//数据传输格式：json
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                //请求失败处理函数
+                alert('获取用户失败');
+            },
+            success: function (data) {
+                var k = data.data;
+                console.log(k)
+                console.log(data)
+                for (var i = 0; i < k.length; i++) {
+                    $("#projectid").append("<option value='" + k[i].name + "' data-id='" + k[i].name + "'>" + k[i].name + "</option>");
+                }
+            }
+        });
+    }
+
+    $(function () {
+
+        var panehHidden = false;
+        if ($(this).width() < 769) {
+            panehHidden = true;
+        }
+        $('body').layout({initClosed: panehHidden, west__size: 185});
+        // 回到顶部绑定
+        if ($.fn.toTop !== undefined) {
+            var opt = {
+                win: $('.ui-layout-center'),
+                doc: $('.ui-layout-center')
+            };
+            $('#scroll-up').toTop(opt);
+        }
+        queryBrandList();
+        queryShelvesTree();
+    });
+
+    function queryBrandList() {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "takeInfo",
+            columns: [{
+                checkbox: true
+            },
                 {
                     field: 'id',
                     title: '',
@@ -175,32 +247,32 @@
                 {
                     title: '操作',
                     align: 'center',
-                    formatter: function(value, row, index) {
+                    formatter: function (value, row, index) {
                         var actions = [];
                         actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
                         return actions.join('');
                     }
                 }]
-            };
-            $.table.init(options);
         };
-        function queryShelvesTree()
-        {
-            var url = ctx + "project/shelves/treeData";
-            var options = {
-                url: url,
-                expandLevel: 2,
-                onClick : zOnClick
-            };
-            $.tree.init(options);
+        $.table.init(options);
+    };
 
-            function zOnClick(event, shelvesId, treeNode) {
-                $("#shelvesId").val(treeNode.id);
-                $("#parentId").val(treeNode.pId);
-                $.table.search();
-            }
+    function queryShelvesTree() {
+        var url = ctx + "project/shelves/treeData";
+        var options = {
+            url: url,
+            expandLevel: 2,
+            onClick: zOnClick
+        };
+        $.tree.init(options);
+
+        function zOnClick(event, shelvesId, treeNode) {
+            $("#shelvesId").val(treeNode.id);
+            $("#parentId").val(treeNode.pId);
+            $.table.search();
         }
-    </script>
+    }
+</script>
 </body>
 </html>

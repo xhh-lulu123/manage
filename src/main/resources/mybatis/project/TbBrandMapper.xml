@@ -45,7 +45,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null "> and update_time = #{updateTime}</if>
         </where>
     </select>
-    
+
+    <select id="selectTbBrandByCategoryId" parameterType="String" resultMap="TbBrandResult">
+       select id,name from tb_brand where category_id = #{categoryId}
+    </select>
+
     <select id="selectTbBrandById" parameterType="String" resultMap="TbBrandResult">
        select tb.id, tb.category_id, tc.name category_name, tb.name, tb.unit, tb.shelves_id, ts.name shelves_name, tb.total, tb.`inout`,
         tb.surplus, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.remark from tb_brand tb

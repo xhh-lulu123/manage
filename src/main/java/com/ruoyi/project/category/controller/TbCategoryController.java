@@ -55,6 +55,18 @@ public class TbCategoryController extends BaseController
     }
 
     /**
+     * 查询category列表
+     */
+    @RequiresPermissions("project:category:list")
+    @PostMapping("/allList")
+    @ResponseBody
+    public AjaxResult list()
+    {
+        List<TbCategory> list = tbCategoryService.selectTbCategoryList(null);
+        return AjaxResult.success(list);
+    }
+
+    /**
      * 导出category列表
      */
     @RequiresPermissions("project:category:export")

@@ -32,6 +32,10 @@ public class TbTakeInfo extends BaseEntity
     @Excel(name = "类别名称")
     private String categoryName;
 
+    /** 类别名称 */
+    @Excel(name = "类别名称")
+    private String categoryId;
+
     /** 名称 */
     @Excel(name = "物品名称")
     private String brandName;
@@ -52,6 +56,16 @@ public class TbTakeInfo extends BaseEntity
     /** 领走时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "领走时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date beginTime;
+
+    /** 领走时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "领走时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date endTime;
+
+    /** 领走时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "领走时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date takeTime;
 
     /** 领走数量 */
@@ -62,12 +76,28 @@ public class TbTakeInfo extends BaseEntity
     @Excel(name = "流向")
     private String takeTo;
 
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public Long getShelvesId() {
         return shelvesId;
     }
 
     public void setShelvesId(Long shelvesId) {
         this.shelvesId = shelvesId;
+    }
+
+    public Date getTakeTime() {
+        return takeTime;
+    }
+
+    public void setTakeTime(Date takeTime) {
+        this.takeTime = takeTime;
     }
 
     public String getCategoryName() {
@@ -129,15 +159,23 @@ public class TbTakeInfo extends BaseEntity
     {
         return takeBy;
     }
-    public void setTakeTime(Date takeTime)
-    {
-        this.takeTime = takeTime;
+
+    public Date getBeginTime() {
+        return beginTime;
     }
 
-    public Date getTakeTime()
-    {
-        return takeTime;
+    public void setBeginTime(Date beginTime) {
+        this.beginTime = beginTime;
     }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
     public void setTakeNum(Long takeNum)
     {
         this.takeNum = takeNum;
@@ -163,7 +201,6 @@ public class TbTakeInfo extends BaseEntity
             .append("id", getId())
             .append("brandId", getBrandId())
             .append("takeBy", getTakeBy())
-            .append("takeTime", getTakeTime())
             .append("takeNum", getTakeNum())
             .append("takeTo", getTakeTo())
             .append("createBy", getCreateBy())

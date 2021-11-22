@@ -27,6 +27,15 @@ public interface ITbBrandService
      */
     public List<TbBrand> selectTbBrandList(TbBrand tbBrand);
 
+    /**
+     * 查询brand列表
+     *
+     * @param
+     * @return brand集合
+     */
+    public List<TbBrand> selectTbBrandByCategoryId(String categoryId);
+
+
     public List<TbBrand> selectTbBrandBy(String name);
 
     /**

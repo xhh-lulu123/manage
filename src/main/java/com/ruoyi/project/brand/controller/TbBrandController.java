@@ -8,11 +8,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
 import com.ruoyi.project.brand.domain.TbBrand;
@@ -56,6 +52,19 @@ public class TbBrandController extends BaseController
     {
         List<TbCategory> list = tbCategoryService.selectTbCategoryList(null);
         return AjaxResult.success(getDataTable(list));
+    }
+
+    /**
+     * 查询brand列表
+     */
+    @RequiresPermissions("project:brand:list")
+    @PostMapping("/listByCategoryId")
+    @ResponseBody
+    public AjaxResult listByCategoryId(TbBrand brand)
+    {
+        startPage();
+        List<TbBrand> list = tbBrandService.selectTbBrandByCategoryId(brand.getCategoryId());
+        return AjaxResult.success(list);
     }
 
     /**
