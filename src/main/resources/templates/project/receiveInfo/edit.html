@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <th:block th:include="include :: header('修改takeInfo')" />
+    <th:block th:include="include :: header('修改receiveInfo')" />
     <th:block th:include="include :: datetimepicker-css" />
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-takeInfo-edit" th:object="${tbTakeInfo}">
+        <form class="form-horizontal m" id="form-receiveInfo-edit" th:object="${tbReceiveInfo}">
             <input name="id" th:field="*{id}" type="hidden">
             <div class="form-group">
                 <label class="col-sm-3 control-label">类别名称：</label>
@@ -17,40 +17,40 @@
                     <!--                    </select>-->
                 </div>
             </div>
-            <div class="form-group">    
+            <div class="form-group">
                 <label class="col-sm-3 control-label">物品名称：</label>
                 <div class="col-sm-8">
                     <input name="brandName" th:field="*{brandName}" class="form-control" type="text" readonly="readonly">
-<!--                    <select name="brandId" class="form-control" readonly="readonly" th:with="type=${@brandService.selectTbBrandList(null)}" >-->
-<!--                        <option th:each="brand : ${type}" th:text="${brand.name}" th:value="${brand.id}" th:selected = "${brand.id eq nowid}" ></option>-->
-<!--                    </select>-->
+                    <!--                    <select name="brandId" class="form-control" readonly="readonly" th:with="type=${@brandService.selectTbBrandList(null)}" >-->
+                    <!--                        <option th:each="brand : ${type}" th:text="${brand.name}" th:value="${brand.id}" th:selected = "${brand.id eq nowid}" ></option>-->
+                    <!--                    </select>-->
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">领走人：</label>
+                <label class="col-sm-3 control-label">存入人：</label>
                 <div class="col-sm-8">
-                    <input required name="takeBy" th:field="*{takeBy}" class="form-control" type="text">
+                    <input name="receiveBy" th:field="*{receiveBy}" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">领走时间：</label>
+                <label class="col-sm-3 control-label">存入时间：</label>
                 <div class="col-sm-8">
                     <div class="input-group date">
-                        <input required name="takeTime" th:value="${#dates.format(tbTakeInfo.takeTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <input name="receiveTime" th:value="${#dates.format(tbReceiveInfo.receiveTime, 'yyyy-MM-dd')}" class="form-control" placeholder="yyyy-MM-dd" type="text">
                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     </div>
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">领走数量：</label>
+                <label class="col-sm-3 control-label">存入数量：</label>
                 <div class="col-sm-8">
-                    <input required name="takeNum" th:field="*{takeNum}" class="form-control" type="text">
+                    <input name="receiveNum" th:field="*{receiveNum}" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">    
-                <label class="col-sm-3 control-label">流向：</label>
+                <label class="col-sm-3 control-label">存入来源：</label>
                 <div class="col-sm-8">
-                    <input name="takeTo" th:field="*{takeTo}" class="form-control" type="text">
+                    <input name="receiveTo" th:field="*{receiveTo}" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-group">
@@ -64,18 +64,18 @@
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: datetimepicker-js" />
     <script th:inline="javascript">
-        var prefix = ctx + "project/takeInfo";
-        $("#form-takeInfo-edit").validate({
+        var prefix = ctx + "project/receiveInfo";
+        $("#form-receiveInfo-edit").validate({
             focusCleanup: true
         });
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/edit", $('#form-takeInfo-edit').serialize());
+                $.operate.save(prefix + "/edit", $('#form-receiveInfo-edit').serialize());
             }
         }
 
-        $("input[name='takeTime']").datetimepicker({
+        $("input[name='receiveTime']").datetimepicker({
             format: "yyyy-mm-dd",
             minView: "month",
             autoclose: true

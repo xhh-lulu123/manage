@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('takeInfo列表')"/>
+    <th:block th:include="include :: header('receiveInfo列表')"/>
     <th:block th:include="include :: layout-latest-css"/>
     <th:block th:include="include :: ztree-css"/>
 </head>
@@ -23,7 +23,6 @@
         <div class="row">
             <div class="col-sm-12 search-collapse">
                 <form id="formId">
-                    <input type="hidden" id="shelvesId" name="shelvesId">
                     <div class="select-list">
                         <ul>
                             <li>
@@ -40,21 +39,21 @@
                                 </select>
                             </li>
                             <li>
-                                <label>领走人：</label>
-                                <input type="text" name="takeBy"/>
+                                <label>存入人：</label>
+                                <input type="text" name="receiveBy"/>
                             </li>
                             <li>
-                                <label>领走时间：</label>
+                                <label>存入时间：</label>
                                 <input type="text" class="time-input" placeholder="开始时间" name="beginTime"/> ——
                                 <input type="text" class="time-input" placeholder="结束时间" name="endTime"/>
                             </li>
                             <li>
-                                <label>领走数量：</label>
-                                <input type="text" name="takeNum"/>
+                                <label>存入数量：</label>
+                                <input type="text" name="receiveNum"/>
                             </li>
                             <li>
-                                <label>流向：</label>
-                                <input type="text" name="takeTo"/>
+                                <label>存入来源：</label>
+                                <input type="text" name="receiveTo"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
@@ -68,19 +67,19 @@
             </div>
 
             <div class="btn-group-sm" id="toolbar" role="group">
-                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="project:takeInfo:add">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="project:receiveInfo:add">
                     <i class="fa fa-plus"></i> 添加
                 </a>
                 <a class="btn btn-primary single disabled" onclick="$.operate.edit()"
-                   shiro:hasPermission="project:takeInfo:edit">
+                   shiro:hasPermission="project:receiveInfo:edit">
                     <i class="fa fa-edit"></i> 修改
                 </a>
                 <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()"
-                   shiro:hasPermission="project:takeInfo:remove">
+                   shiro:hasPermission="project:receiveInfo:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
                 <a class="btn btn-warning" onclick="$.table.exportExcel()"
-                   shiro:hasPermission="project:takeInfo:export">
+                   shiro:hasPermission="project:receiveInfo:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
             </div>
@@ -94,9 +93,9 @@
 <th:block th:include="include :: layout-latest-js"/>
 <th:block th:include="include :: ztree-js"/>
 <script th:inline="javascript">
-    var editFlag = [[${@permission.hasPermi('project:takeInfo:edit')}]];
-    var removeFlag = [[${@permission.hasPermi('project:takeInfo:remove')}]];
-    var prefix = ctx + "project/takeInfo";
+    var editFlag = [[${@permission.hasPermi('project:receiveInfo:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('project:receiveInfo:remove')}]];
+    var prefix = ctx + "project/receiveInfo";
 
     $(function () {
         var aurl = "category/allList";
@@ -148,7 +147,6 @@
             }
         });
     }
-
     $(function () {
 
         var panehHidden = false;
@@ -164,18 +162,17 @@
             };
             $('#scroll-up').toTop(opt);
         }
-        queryTakeInfoList();
+        queryReceiveInfoList();
         queryShelvesTree();
     });
-
-    function queryTakeInfoList() {
+    function queryReceiveInfoList() {
         var options = {
             url: prefix + "/list",
             createUrl: prefix + "/add",
             updateUrl: prefix + "/edit/{id}",
             removeUrl: prefix + "/remove",
             exportUrl: prefix + "/export",
-            modalName: "takeInfo",
+            modalName: "receiveInfo",
             columns: [{
                 checkbox: true
             },
@@ -201,20 +198,20 @@
                     title: '位置'
                 },
                 {
-                    field: 'takeBy',
-                    title: '领走人'
+                    field: 'receiveBy',
+                    title: '存入人'
                 },
                 {
-                    field: 'takeTime',
-                    title: '领走时间'
+                    field: 'receiveTime',
+                    title: '存入时间'
                 },
                 {
-                    field: 'takeNum',
-                    title: '领走数量'
+                    field: 'receiveNum',
+                    title: '存入数量'
                 },
                 {
-                    field: 'takeTo',
-                    title: '流向'
+                    field: 'receiveTo',
+                    title: '存入来源'
                 },
                 {
                     field: 'createBy',
@@ -249,7 +246,6 @@
         };
         $.table.init(options);
     };
-
     function queryShelvesTree() {
         var url = ctx + "project/shelves/treeData";
         var options = {

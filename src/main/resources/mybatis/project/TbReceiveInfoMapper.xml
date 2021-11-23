@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.receiveInfo.mapper.TbReceiveInfoMapper">
+    
+    <resultMap type="TbReceiveInfo" id="TbReceiveInfoResult">
+        <result property="id"    column="id"    />
+        <result property="brandId"    column="brand_id"    />
+        <result property="brandName"    column="brand_name"    />
+        <result property="receiveBy"    column="receive_by"    />
+        <result property="receiveTime"    column="receive_time"    />
+        <result property="receiveNum"    column="receive_num"    />
+        <result property="receiveTo"    column="receive_to"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectTbReceiveInfoVo">
+        select id, brand_id, brand_name, receive_by, receive_time, receive_num, receive_to, create_by, create_time, update_by, update_time, remark from tb_receive_info
+    </sql>
+
+    <select id="selectTbReceiveInfoList" parameterType="TbReceiveInfo" resultMap="TbReceiveInfoResult">
+        select ti.id, ti.brand_id, ti.receive_by, ti.receive_time, ti.receive_num, ti.receive_to,
+        ti.create_by, ti.create_time, ti.update_by, ti.update_time, ti.remark,
+        tb.name brand_name,tb.unit,tb.shelves_id, ts.name shelves_name,tc.name category_name
+        from tb_receive_info ti
+        left join tb_brand tb on tb.id = ti.brand_id
+        left join tb_shelves ts on ts.id = tb.shelves_id
+        left join tb_category tc on tc.id = tb.category_id
+        <where>
+            <if test="categoryId != null  and categoryId != ''"> and tb.category_id = #{categoryId}</if>
+            <if test="brandName != null  and brandName != ''"> and tb.name = #{brandName}</if>
+            <if test="receiveBy != null  and receiveBy != ''"> and receive_by = #{receiveBy}</if>
+            <if test="beginTime != null "> and take_time &gt;= #{beginTime}</if>
+            <if test="endTime != null "> and take_time &lt;= #{endTime}</if>
+            <if test="receiveNum != null "> and receive_num = #{receiveNum}</if>
+            <if test="receiveTo != null  and receiveTo != ''"> and receive_to = #{receiveTo}</if>
+            <if test="shelvesId != null and shelvesId !=0">
+                AND (tb.shelves_id = #{shelvesId} OR tb.shelves_id IN ( SELECT t.id FROM tb_shelves t WHERE FIND_IN_SET (#{shelvesId},ancestors) ))
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectTbReceiveInfoById" parameterType="String" resultMap="TbReceiveInfoResult">
+        select ti.id, ti.brand_id, ti.receive_by, ti.receive_time, ti.receive_num, ti.receive_to,
+        ti.create_by, ti.create_time, ti.update_by, ti.update_time, ti.remark,
+        tb.name brand_name,tb.unit,tb.shelves_id, ts.name shelves_name,tc.name category_name
+        from tb_receive_info ti
+        left join tb_brand tb on tb.id = ti.brand_id
+        left join tb_shelves ts on ts.id = tb.shelves_id
+        left join tb_category tc on tc.id = tb.category_id
+        where ti.id = #{id}
+    </select>
+        
+    <insert id="insertTbReceiveInfo" parameterType="TbReceiveInfo">
+        insert into tb_receive_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="brandId != null">brand_id,</if>
+            <if test="receiveBy != null">receive_by,</if>
+            <if test="receiveTime != null">receive_time,</if>
+            <if test="receiveNum != null">receive_num,</if>
+            <if test="receiveTo != null">receive_to,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="brandId != null">#{brandId},</if>
+            <if test="receiveBy != null">#{receiveBy},</if>
+            <if test="receiveTime != null">#{receiveTime},</if>
+            <if test="receiveNum != null">#{receiveNum},</if>
+            <if test="receiveTo != null">#{receiveTo},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTbReceiveInfo" parameterType="TbReceiveInfo">
+        update tb_receive_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandId != null">brand_id = #{brandId},</if>
+            <if test="receiveBy != null">receive_by = #{receiveBy},</if>
+            <if test="receiveTime != null">receive_time = #{receiveTime},</if>
+            <if test="receiveNum != null">receive_num = #{receiveNum},</if>
+            <if test="receiveTo != null">receive_to = #{receiveTo},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTbReceiveInfoById" parameterType="String">
+        delete from tb_receive_info where id = #{id}
+    </delete>
+
+    <delete id="deleteTbReceiveInfoByIds" parameterType="String">
+        delete from tb_receive_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
