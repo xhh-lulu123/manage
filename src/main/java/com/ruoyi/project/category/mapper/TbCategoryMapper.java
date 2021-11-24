@@ -58,4 +58,6 @@ public interface TbCategoryMapper
      * @return 结果
      */
     public int deleteTbCategoryByIds(String[] ids);
+
+    TbCategory selectTbCategoryByName(TbCategory category);
 }

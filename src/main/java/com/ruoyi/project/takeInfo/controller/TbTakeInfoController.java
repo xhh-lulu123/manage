@@ -1,6 +1,10 @@
 package com.ruoyi.project.takeInfo.controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import com.ruoyi.project.receiveInfo.domain.TbReceiveInfo;
+import com.ruoyi.project.system.user.domain.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +22,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * takeInfoController
@@ -123,4 +128,21 @@ public class TbTakeInfoController extends BaseController
     {
         return toAjax(tbTakeInfoService.deleteTbTakeInfoByIds(ids));
     }
+
+    @Log(title = "takeInfo", businessType = BusinessType.IMPORT)
+    @PostMapping( "/importData")
+    @ResponseBody
+    public AjaxResult importData(MultipartFile file) throws Exception {
+        ExcelUtil<TbTakeInfo> excelUtil = new ExcelUtil<>(TbTakeInfo.class);
+        List<TbTakeInfo> list = excelUtil.importExcel(file.getInputStream());
+        return toAjax(tbTakeInfoService.importData(list));
+    }
+    @GetMapping("/importTemplate")
+    @ResponseBody
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<TbTakeInfo> util = new ExcelUtil<TbTakeInfo>(TbTakeInfo.class);
+        return util.importTemplateExcel("领走数据");
+    }
+
 }

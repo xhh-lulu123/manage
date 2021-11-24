@@ -2,6 +2,7 @@ package com.ruoyi.project.receiveInfo.service;
 
 import java.util.List;
 import com.ruoyi.project.receiveInfo.domain.TbReceiveInfo;
+import com.ruoyi.project.takeInfo.domain.TbTakeInfo;
 
 /**
  * receiveInfoService接口
@@ -58,4 +59,7 @@ public interface ITbReceiveInfoService
      * @return 结果
      */
     public int deleteTbReceiveInfoById(String id);
+
+
+    int importData(List<TbReceiveInfo> receiveInfos) throws Exception;
 }

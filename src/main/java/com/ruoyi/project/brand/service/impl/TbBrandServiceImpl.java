@@ -1,9 +1,16 @@
 package com.ruoyi.project.brand.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.security.ShiroUtils;
 import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.project.category.domain.TbCategory;
+import com.ruoyi.project.category.service.ITbCategoryService;
+import com.ruoyi.project.takeInfo.domain.TbTakeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +30,9 @@ public class TbBrandServiceImpl implements ITbBrandService
 {
     @Autowired
     private TbBrandMapper tbBrandMapper;
+
+    @Autowired
+    private ITbCategoryService categoryService;
 
     /**
      * 查询brand
@@ -60,10 +70,9 @@ public class TbBrandServiceImpl implements ITbBrandService
      * @return brand
      */
     @Override
-    public List<TbBrand> selectTbBrandBy(String name)
-    {   TbBrand tbBrand = new TbBrand();
-    tbBrand.setName(name);
-        return tbBrandMapper.selectTbBrandList(tbBrand);
+    public TbBrand selectTbBrandByName(TbBrand tbBrand)
+    {
+        return tbBrandMapper.selectTbBrandByName(tbBrand);
     }
 
 
@@ -75,8 +84,8 @@ public class TbBrandServiceImpl implements ITbBrandService
      */
     @Transactional
     @Override
-    public int insertTbBrand(TbBrand tbBrand)
-    {
+    public int insertTbBrand(TbBrand tbBrand) throws Exception {
+        checkName(tbBrand);
         tbBrand.setId(UUID.randomUUID().toString());
         tbBrand.setCreateBy(ShiroUtils.getSysUser().getUserName());
         tbBrand.setCreateTime(DateUtils.getNowDate());
@@ -92,8 +101,8 @@ public class TbBrandServiceImpl implements ITbBrandService
      */
     @Transactional
     @Override
-    public int updateTbBrand(TbBrand tbBrand)
-    {
+    public int updateTbBrand(TbBrand tbBrand) throws Exception {
+        checkName(tbBrand);
         tbBrand.setUpdateBy(ShiroUtils.getSysUser().getUserName());
         tbBrand.setUpdateTime(DateUtils.getNowDate());
         return tbBrandMapper.updateTbBrand(tbBrand);
@@ -123,5 +132,43 @@ public class TbBrandServiceImpl implements ITbBrandService
     public int deleteTbBrandById(String id)
     {
         return tbBrandMapper.deleteTbBrandById(id);
+    }
+
+    public void checkName(TbBrand brand) throws Exception {
+        TbBrand tbBrand = tbBrandMapper.selectTbBrandByName(brand);
+        if (brand!=null){
+            throw new Exception(brand.getName()+"已存在，请勿重复添加！！");
+        }
+    }
+
+    public int importData(List<TbBrand> tbBrands) throws Exception {
+        int rows = 1;
+        Date date = new Date();
+        List<TbBrand> list = new ArrayList<TbBrand>();
+        for (TbBrand tbBrand : tbBrands) {
+            TbCategory category = new TbCategory();
+            category.setName(tbBrand.getCategoryName());
+            TbCategory tbCategory = categoryService.selectTbCategoryByName(category);
+            if (tbCategory==null){
+                throw new Exception("物品：'" + tbBrand.getCategoryName() + "'在系统中未找到，先添加物品：'"+tbBrand.getCategoryName()+"'再导入");
+            }
+//            List<TbTakeInfo> takeInfoList = selectByMcAndGkdw(tKyglGfxgwxx.getMc(),tKyglGfxgwxx.getGkdw());
+//            List<TKyglGfxgwxx> tKyglGfxgwxxes = selectTKyglGfxgwxxList(tKyglGfxgwxx);
+//
+//            //校验是否有相同记录存在表中
+//            if (gfxgwxxs.size() > 0) {
+//                throw new ServiceException("岗位+归口单位：" + tKyglGfxgwxx.getMc() +"&"+tKyglGfxgwxx.getGkdw()+
+//                "填写的信息已有相同记录，请核对数据");
+//            }
+            tbBrand.setCategoryId(category.getId());
+            tbBrand.setId(UUID.fastUUID().toString());
+//            takeInfo.setCreateBy(ShiroUtils.getSysUser().getUserName());
+            tbBrand.setCreateTime(date);
+            list.add(tbBrand);
+        }
+        if (list.size() > 0) {
+            rows = tbBrandMapper.insertBatch(list);
+        }
+        return rows;
     }
 }

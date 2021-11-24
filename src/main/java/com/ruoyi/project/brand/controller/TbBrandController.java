@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.ruoyi.project.category.domain.TbCategory;
 import com.ruoyi.project.category.service.ITbCategoryService;
+import com.ruoyi.project.receiveInfo.domain.TbReceiveInfo;
+import com.ruoyi.project.system.user.domain.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * brandController
@@ -110,8 +113,7 @@ public class TbBrandController extends BaseController
     @Log(title = "brand", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(TbBrand tbBrand)
-    {
+    public AjaxResult addSave(TbBrand tbBrand) throws Exception {
         return toAjax(tbBrandService.insertTbBrand(tbBrand));
     }
 
@@ -133,8 +135,7 @@ public class TbBrandController extends BaseController
     @Log(title = "brand", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(TbBrand tbBrand)
-    {
+    public AjaxResult editSave(TbBrand tbBrand) throws Exception {
         return toAjax(tbBrandService.updateTbBrand(tbBrand));
     }
 
@@ -148,5 +149,22 @@ public class TbBrandController extends BaseController
     public AjaxResult remove(String ids)
     {
         return toAjax(tbBrandService.deleteTbBrandByIds(ids));
+    }
+
+    @Log(title = "brand", businessType = BusinessType.IMPORT)
+    @PostMapping( "/importData")
+    @ResponseBody
+    public AjaxResult importData(MultipartFile file) throws Exception {
+        ExcelUtil<TbBrand> excelUtil = new ExcelUtil<>(TbBrand.class);
+        List<TbBrand> list = excelUtil.importExcel(file.getInputStream());
+        return toAjax(tbBrandService.importData(list));
+    }
+
+    @GetMapping("/importTemplate")
+    @ResponseBody
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<TbBrand> util = new ExcelUtil<TbBrand>(TbBrand.class);
+        return util.importTemplateExcel("物品数据");
     }
 }

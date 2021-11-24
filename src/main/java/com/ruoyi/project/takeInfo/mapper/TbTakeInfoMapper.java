@@ -2,6 +2,7 @@ package com.ruoyi.project.takeInfo.mapper;
 
 import java.util.List;
 import com.ruoyi.project.takeInfo.domain.TbTakeInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * takeInfoMapper接口
@@ -34,6 +35,14 @@ public interface TbTakeInfoMapper
      * @return 结果
      */
     public int insertTbTakeInfo(TbTakeInfo tbTakeInfo);
+
+    /**
+     * 批量新增数据（MyBatis原生foreach方法）
+     *
+     * @param entities List<TbTakeInfo> 实例对象列表
+     * @return 影响行数
+     */
+    int insertBatch(@Param("entities") List<TbTakeInfo> entities);
 
     /**
      * 修改takeInfo

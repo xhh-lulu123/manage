@@ -2,6 +2,8 @@ package com.ruoyi.project.receiveInfo.mapper;
 
 import java.util.List;
 import com.ruoyi.project.receiveInfo.domain.TbReceiveInfo;
+import com.ruoyi.project.takeInfo.domain.TbTakeInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * receiveInfoMapper接口
@@ -35,6 +37,7 @@ public interface TbReceiveInfoMapper
      */
     public int insertTbReceiveInfo(TbReceiveInfo tbReceiveInfo);
 
+    int insertBatch(@Param("entities") List<TbReceiveInfo> entities);
     /**
      * 修改receiveInfo
      * 

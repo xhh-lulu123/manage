@@ -1,6 +1,8 @@
 package com.ruoyi.project.category.controller;
 
 import java.util.List;
+
+import com.ruoyi.project.brand.domain.TbBrand;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -96,8 +98,7 @@ public class TbCategoryController extends BaseController
     @Log(title = "category", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(TbCategory tbCategory)
-    {
+    public AjaxResult addSave(TbCategory tbCategory) throws Exception {
         return toAjax(tbCategoryService.insertTbCategory(tbCategory));
     }
 
@@ -119,8 +120,7 @@ public class TbCategoryController extends BaseController
     @Log(title = "category", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(TbCategory tbCategory)
-    {
+    public AjaxResult editSave(TbCategory tbCategory) throws Exception {
         return toAjax(tbCategoryService.updateTbCategory(tbCategory));
     }
 
@@ -135,4 +135,5 @@ public class TbCategoryController extends BaseController
     {
         return toAjax(tbCategoryService.deleteTbCategoryByIds(ids));
     }
+
 }

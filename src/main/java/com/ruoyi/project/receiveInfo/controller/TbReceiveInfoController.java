@@ -1,6 +1,9 @@
 package com.ruoyi.project.receiveInfo.controller;
 
 import java.util.List;
+
+import com.ruoyi.project.brand.domain.TbBrand;
+import com.ruoyi.project.takeInfo.domain.TbTakeInfo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ import com.ruoyi.framework.web.controller.BaseController;
 import com.ruoyi.framework.web.domain.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * receiveInfoController
@@ -58,7 +62,7 @@ public class TbReceiveInfoController extends BaseController
      * 导出receiveInfo列表
      */
     @RequiresPermissions("project:receiveInfo:export")
-    @Log(title = "receiveInfo", businessType = BusinessType.EXPORT)
+    @Log(title = "存入信息", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(TbReceiveInfo tbReceiveInfo)
@@ -81,7 +85,7 @@ public class TbReceiveInfoController extends BaseController
      * 新增保存receiveInfo
      */
     @RequiresPermissions("project:receiveInfo:add")
-    @Log(title = "receiveInfo", businessType = BusinessType.INSERT)
+    @Log(title = "存入信息", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(TbReceiveInfo tbReceiveInfo)
@@ -104,7 +108,7 @@ public class TbReceiveInfoController extends BaseController
      * 修改保存receiveInfo
      */
     @RequiresPermissions("project:receiveInfo:edit")
-    @Log(title = "receiveInfo", businessType = BusinessType.UPDATE)
+    @Log(title = "存入信息", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(TbReceiveInfo tbReceiveInfo)
@@ -116,11 +120,28 @@ public class TbReceiveInfoController extends BaseController
      * 删除receiveInfo
      */
     @RequiresPermissions("project:receiveInfo:remove")
-    @Log(title = "receiveInfo", businessType = BusinessType.DELETE)
+    @Log(title = "存入信息", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
     public AjaxResult remove(String ids)
     {
         return toAjax(tbReceiveInfoService.deleteTbReceiveInfoByIds(ids));
+    }
+
+    @Log(title = "存入信息", businessType = BusinessType.IMPORT)
+    @PostMapping( "/importData")
+    @ResponseBody
+    public AjaxResult importData(MultipartFile file) throws Exception {
+        ExcelUtil<TbReceiveInfo> excelUtil = new ExcelUtil<>(TbReceiveInfo.class);
+        List<TbReceiveInfo> list = excelUtil.importExcel(file.getInputStream());
+        return toAjax(tbReceiveInfoService.importData(list));
+    }
+
+    @GetMapping("/importTemplate")
+    @ResponseBody
+    public AjaxResult importTemplate()
+    {
+        ExcelUtil<TbReceiveInfo> util = new ExcelUtil<TbReceiveInfo>(TbReceiveInfo.class);
+        return util.importTemplateExcel("存入数据");
     }
 }

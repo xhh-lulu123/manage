@@ -85,6 +85,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into tb_take_info(id,brand_id, take_by, take_time, take_num, take_to, create_by, create_time, update_by, update_time, remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id},#{entity.brandId}, #{entity.takeBy}, #{entity.takeTime}, #{entity.takeNum}, #{entity.takeTo}, #{entity.createBy}, #{entity.createTime}, #{entity.updateBy}, #{entity.updateTime}, #{entity.remark})
+        </foreach>
+    </insert>
+
     <update id="updateTbTakeInfo" parameterType="TbTakeInfo">
         update tb_take_info
         <trim prefix="SET" suffixOverrides=",">

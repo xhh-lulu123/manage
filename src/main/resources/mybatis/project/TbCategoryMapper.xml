@@ -38,6 +38,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTbCategoryVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectTbCategoryByName" parameterType="String" resultMap="TbCategoryResult">
+        <include refid="selectTbCategoryVo"/>
+        where name = #{name}
+        <if test="name!=null and name !=''">
+            id not in (#{id})
+        </if>
+    </select>
         
     <insert id="insertTbCategory" parameterType="TbCategory">
         insert into tb_category

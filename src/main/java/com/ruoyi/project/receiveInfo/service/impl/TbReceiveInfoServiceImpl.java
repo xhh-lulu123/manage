@@ -1,9 +1,14 @@
 package com.ruoyi.project.receiveInfo.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.security.ShiroUtils;
 import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.project.brand.domain.TbBrand;
+import com.ruoyi.project.brand.service.ITbBrandService;
+import com.ruoyi.project.takeInfo.domain.TbTakeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.receiveInfo.mapper.TbReceiveInfoMapper;
@@ -22,6 +27,8 @@ public class TbReceiveInfoServiceImpl implements ITbReceiveInfoService
 {
     @Autowired
     private TbReceiveInfoMapper tbReceiveInfoMapper;
+    @Autowired
+    private ITbBrandService brandService;
 
     /**
      * 查询receiveInfo
@@ -98,5 +105,37 @@ public class TbReceiveInfoServiceImpl implements ITbReceiveInfoService
     public int deleteTbReceiveInfoById(String id)
     {
         return tbReceiveInfoMapper.deleteTbReceiveInfoById(id);
+    }
+
+    @Override
+    public int importData(List<TbReceiveInfo> tbReceiveInfos) throws Exception {
+        int rows = 1;
+        Date date = new Date();
+        List<TbReceiveInfo> list = new ArrayList<TbReceiveInfo>();
+        for (TbReceiveInfo receiveInfo : tbReceiveInfos) {
+            TbBrand tbBrand = new TbBrand();
+            tbBrand.setName(receiveInfo.getBrandName());
+            TbBrand brand = brandService.selectTbBrandByName(tbBrand);
+            if (brand==null){
+                throw new Exception("物品：'" + receiveInfo.getBrandName() + "'在系统中未找到，先添加物品：'"+receiveInfo.getBrandName()+"'再导入");
+            }
+//            List<TbTakeInfo> takeInfoList = selectByMcAndGkdw(tKyglGfxgwxx.getMc(),tKyglGfxgwxx.getGkdw());
+//            List<TKyglGfxgwxx> tKyglGfxgwxxes = selectTKyglGfxgwxxList(tKyglGfxgwxx);
+//
+//            //校验是否有相同记录存在表中
+//            if (gfxgwxxs.size() > 0) {
+//                throw new ServiceException("岗位+归口单位：" + tKyglGfxgwxx.getMc() +"&"+tKyglGfxgwxx.getGkdw()+
+//                "填写的信息已有相同记录，请核对数据");
+//            }
+            receiveInfo.setBrandId(brand.getId());
+            receiveInfo.setId(UUID.fastUUID().toString());
+//            takeInfo.setCreateBy(ShiroUtils.getSysUser().getUserName());
+            receiveInfo.setCreateTime(date);
+            list.add(receiveInfo);
+        }
+        if (list.size() > 0) {
+            rows = tbReceiveInfoMapper.insertBatch(list);
+        }
+        return rows;
     }
 }

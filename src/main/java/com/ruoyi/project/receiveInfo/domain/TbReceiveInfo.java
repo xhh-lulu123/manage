@@ -21,10 +21,10 @@ public class TbReceiveInfo extends BaseEntity
     private String id;
 
     /**  */
-    @Excel(name = "")
+
     private String brandId;
     /**  */
-    @Excel(name = "")
+
     private Long shelvesId;
 
     /** 类别名称 */
@@ -32,11 +32,11 @@ public class TbReceiveInfo extends BaseEntity
     private String categoryName;
 
     /** 类别名称 */
-    @Excel(name = "类别名称")
+
     private String categoryId;
 
     /** 商品名称 */
-    @Excel(name = "商品名称")
+    @Excel(name = "物品名称")
     private String brandName;
 
 
@@ -66,12 +66,12 @@ public class TbReceiveInfo extends BaseEntity
 
     /** 领走时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "领走时间", width = 30, dateFormat = "yyyy-MM-dd")
+
     private Date beginTime;
 
     /** 领走时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "领走时间", width = 30, dateFormat = "yyyy-MM-dd")
+
     private Date endTime;
 
     public String getUnit() {

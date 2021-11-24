@@ -2,6 +2,7 @@ package com.ruoyi.project.brand.mapper;
 
 import java.util.List;
 import com.ruoyi.project.brand.domain.TbBrand;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * brandMapper接口
@@ -27,8 +28,10 @@ public interface TbBrandMapper
      */
     public List<TbBrand> selectTbBrandList(TbBrand tbBrand);
 
+
     public List<TbBrand> selectTbBrandByCategoryId(String categoryId);
 
+    TbBrand selectTbBrandByName(TbBrand brand);
     /**
      * 新增brand
      * 
@@ -37,6 +40,7 @@ public interface TbBrandMapper
      */
     public int insertTbBrand(TbBrand tbBrand);
 
+    int insertBatch(@Param("entities") List<TbBrand> entities);
     /**
      * 修改brand
      * 

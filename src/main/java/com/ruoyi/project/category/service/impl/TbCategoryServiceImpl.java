@@ -4,6 +4,7 @@ import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.security.ShiroUtils;
 import com.ruoyi.common.utils.uuid.UUID;
+import com.ruoyi.project.brand.domain.TbBrand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.category.mapper.TbCategoryMapper;
@@ -54,8 +55,8 @@ public class TbCategoryServiceImpl implements ITbCategoryService
      * @return 结果
      */
     @Override
-    public int insertTbCategory(TbCategory tbCategory)
-    {
+    public int insertTbCategory(TbCategory tbCategory) throws Exception {
+        checkName(tbCategory);
         tbCategory.setId(UUID.randomUUID().toString());
         tbCategory.setCreateBy(ShiroUtils.getLoginName());
         tbCategory.setCreateTime(DateUtils.getNowDate());
@@ -69,8 +70,8 @@ public class TbCategoryServiceImpl implements ITbCategoryService
      * @return 结果
      */
     @Override
-    public int updateTbCategory(TbCategory tbCategory)
-    {
+    public int updateTbCategory(TbCategory tbCategory) throws Exception {
+        checkName(tbCategory);
         tbCategory.setCreateBy(ShiroUtils.getLoginName());
         tbCategory.setUpdateTime(DateUtils.getNowDate());
         return tbCategoryMapper.updateTbCategory(tbCategory);
@@ -98,5 +99,17 @@ public class TbCategoryServiceImpl implements ITbCategoryService
     public int deleteTbCategoryById(String id)
     {
         return tbCategoryMapper.deleteTbCategoryById(id);
+    }
+
+    @Override
+    public TbCategory selectTbCategoryByName(TbCategory category) {
+        return null;
+    }
+
+    public void checkName(TbCategory category) throws Exception {
+        TbCategory tbCategory = tbCategoryMapper.selectTbCategoryByName(category);
+        if (tbCategory!=null){
+            throw new Exception(category.getName()+"已存在，请勿重复添加！！");
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.ruoyi.project.takeInfo.service;
 
 import java.util.List;
 import com.ruoyi.project.takeInfo.domain.TbTakeInfo;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * takeInfoService接口
@@ -35,6 +36,8 @@ public interface ITbTakeInfoService
      */
     public int insertTbTakeInfo(TbTakeInfo tbTakeInfo);
 
+
+
     /**
      * 修改takeInfo
      * 
@@ -58,4 +61,7 @@ public interface ITbTakeInfoService
      * @return 结果
      */
     public int deleteTbTakeInfoById(String id);
+
+
+    int importData(List<TbTakeInfo> tbTakeInfos) throws Exception;
 }

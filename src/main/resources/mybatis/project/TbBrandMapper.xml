@@ -50,6 +50,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        select id,name from tb_brand where category_id = #{categoryId}
     </select>
 
+    <select id="selectTbBrandByName" parameterType="TbBrand" resultMap="TbBrandResult">
+       select id,name from tb_brand where name = #{name}
+       <if test="id !=null and id !=''">
+           and id not in (#{id})
+       </if>
+    </select>
+
     <select id="selectTbBrandById" parameterType="String" resultMap="TbBrandResult">
        select tb.id, tb.category_id, tc.name category_name, tb.name, tb.unit, tb.shelves_id, ts.name shelves_name, tb.total, tb.`inout`,
         tb.surplus, tb.create_by, tb.create_time, tb.update_by, tb.update_time, tb.remark from tb_brand tb
@@ -93,6 +100,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
          </trim>
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into tb_receive_info(id,category_id, `name`, unit, shelves_id, shelves_name,total,`inout`,surplus, create_by, create_time, update_by, update_time, remark)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.id},#{entity.categoryId}, #{entity.name}, #{entity.unit}, #{entity.shelevs}, #{entity.shelvesName},
+            #{entity.total}, #{entity.inout}, #{entity.surplus},
+             #{entity.createBy}, #{entity.createTime}, #{entity.updateBy}, #{entity.updateTime}, #{entity.remark})
+        </foreach>
     </insert>
 
     <update id="updateTbBrand" parameterType="TbBrand">

@@ -60,6 +60,9 @@
                 <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="project:brand:remove">
                     <i class="fa fa-remove"></i> 删除
                 </a>
+                <a class="btn btn-info" onclick="$.table.importExcel()" shiro:hasPermission="project:brand:import">
+                    <i class="fa fa-upload"></i> 导入
+                </a>
                 <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="project:brand:export">
                     <i class="fa fa-download"></i> 导出
                 </a>
@@ -101,7 +104,9 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                modalName: "brand",
+                importUrl: prefix + "/importData",
+                importTemplateUrl: prefix + "/importTemplate",
+                modalName: "物品数据",
                 columns: [{
                     checkbox: true
                 },
@@ -198,6 +203,20 @@
         $('#btnRefresh').click(function() {
             queryDeptTree();
         });
+
     </script>
 </body>
+<script id="importTpl" type="text/template">
+    <form enctype="multipart/form-data" class="mt20 mb10">
+        <div class="col-xs-offset-1">
+            <input type="file" id="file" name="file"/>
+            <div class="mt10 pt5">
+                &nbsp;	<a onclick="$.table.importTemplate()" class="btn btn-default btn-xs"><i class="fa fa-file-excel-o"></i> 下载模板</a>
+            </div>
+            <font color="red" class="pull-left mt10">
+                提示：仅允许导入“xls”或“xlsx”格式文件！
+            </font>
+        </div>
+    </form>
+</script>
 </html>

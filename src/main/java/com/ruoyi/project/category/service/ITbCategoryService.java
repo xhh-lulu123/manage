@@ -34,7 +34,7 @@ public interface ITbCategoryService
      * @param tbCategory category
      * @return 结果
      */
-    public int insertTbCategory(TbCategory tbCategory);
+    public int insertTbCategory(TbCategory tbCategory) throws Exception;
 
     /**
      * 修改category
@@ -42,7 +42,7 @@ public interface ITbCategoryService
      * @param tbCategory category
      * @return 结果
      */
-    public int updateTbCategory(TbCategory tbCategory);
+    public int updateTbCategory(TbCategory tbCategory) throws Exception;
 
     /**
      * 批量删除category
@@ -59,4 +59,6 @@ public interface ITbCategoryService
      * @return 结果
      */
     public int deleteTbCategoryById(String id);
+
+    TbCategory selectTbCategoryByName(TbCategory category);
 }
