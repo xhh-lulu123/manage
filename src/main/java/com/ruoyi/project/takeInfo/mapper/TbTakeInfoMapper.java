@@ -20,6 +20,7 @@ public interface TbTakeInfoMapper
      */
     public TbTakeInfo selectTbTakeInfoById(String id);
 
+    long selectTakeNumByBrandId(String brandId);
     /**
      * 查询takeInfo列表
      * 

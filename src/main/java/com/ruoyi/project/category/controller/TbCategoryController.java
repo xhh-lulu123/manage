@@ -131,8 +131,7 @@ public class TbCategoryController extends BaseController
     @Log(title = "category", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) throws Exception {
         return toAjax(tbCategoryService.deleteTbCategoryByIds(ids));
     }
 

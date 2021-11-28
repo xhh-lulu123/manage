@@ -37,6 +37,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join tb_shelves p on p.id = t.parent_id
         where t.id = #{id}
     </select>
+
+    <select id="selectTbShelvesByName"  resultMap="TbShelvesResult">
+        select id, parent_id, name
+        from tb_shelves
+        where name = #{name}
+        limit 1
+    </select>
         
     <insert id="insertTbShelves" parameterType="TbShelves" useGeneratedKeys="true" keyProperty="id">
         insert into tb_shelves

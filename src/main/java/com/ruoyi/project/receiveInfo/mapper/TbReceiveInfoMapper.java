@@ -37,6 +37,7 @@ public interface TbReceiveInfoMapper
      */
     public int insertTbReceiveInfo(TbReceiveInfo tbReceiveInfo);
 
+    Long selectNumByBrandId(@Param("brandId") String brandId);
     int insertBatch(@Param("entities") List<TbReceiveInfo> entities);
     /**
      * 修改receiveInfo

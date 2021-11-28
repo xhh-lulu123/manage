@@ -33,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join tb_category tc on tc.id = tb.category_id
         left join tb_shelves ts on ts.id = tb.shelves_id
         <where>
+            <if test="categoryId != null  and categoryId != ''"> and tb.category_id = #{categoryId}</if>
             <if test="categoryName != null  and categoryName != ''"> and tc.name = #{categoryName}</if>
             <if test="name != null  and name != ''"> and tb.name like concat('%', #{name}, '%')</if>
             <if test="shelvesId != null and shelvesId !=0">
@@ -44,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
             <if test="updateTime != null "> and update_time = #{updateTime}</if>
         </where>
+        order by tc.name ,tb.name,tb.create_time desc
     </select>
 
     <select id="selectTbBrandByCategoryId" parameterType="String" resultMap="TbBrandResult">
@@ -55,6 +57,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        <if test="id !=null and id !=''">
            and id not in (#{id})
        </if>
+    </select>
+
+    <select id="selectNumByCategoryId" resultType="long">
+        select ifnull(sum(`inout`),0)  from tb_brand where category_id = #{categoryId}
+    </select>
+
+    <select id="selectTakeNumByCategoryId" resultType="long">
+        select ifnull(sum(surplus),0)  from tb_brand where category_id = #{categoryId}
+    </select>
+
+    <select id="selectCountByCategoryId" resultType="long">
+        select ifnull(sum(total),0)  from tb_brand where category_id = #{categoryId}
     </select>
 
     <select id="selectTbBrandById" parameterType="String" resultMap="TbBrandResult">
@@ -102,16 +116,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+    <update id="updateTbBrandInOut" parameterType="TbBrand">
+        update tb_brand
+        <set>
+            <if test="inout != null">`inout` = #{inout},</if>
+            <if test="surplus != null">surplus = #{surplus},</if>
+
+        </set>
+        where id = #{id}
+    </update>
+
     <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
-        insert into tb_receive_info(id,category_id, `name`, unit, shelves_id, shelves_name,total,`inout`,surplus, create_by, create_time, update_by, update_time, remark)
+        insert into tb_brand(id,category_id, `name`, unit, shelves_id, shelves_name,total,`inout`,surplus, create_by, create_time, update_by, update_time, remark)
         values
         <foreach collection="entities" item="entity" separator=",">
-            (#{entity.id},#{entity.categoryId}, #{entity.name}, #{entity.unit}, #{entity.shelevs}, #{entity.shelvesName},
+            (#{entity.id},#{entity.categoryId}, #{entity.name}, #{entity.unit}, #{entity.shelvesId}, #{entity.shelvesName},
             #{entity.total}, #{entity.inout}, #{entity.surplus},
              #{entity.createBy}, #{entity.createTime}, #{entity.updateBy}, #{entity.updateTime}, #{entity.remark})
         </foreach>
     </insert>
-
     <update id="updateTbBrand" parameterType="TbBrand">
         update tb_brand
         <trim prefix="SET" suffixOverrides=",">

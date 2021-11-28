@@ -19,6 +19,7 @@ public interface TbShelvesMapper
      */
     public TbShelves selectTbShelvesById(Long id);
 
+    TbShelves selectTbShelvesByName(String name);
     /**
      * 查询shelves列表
      * 

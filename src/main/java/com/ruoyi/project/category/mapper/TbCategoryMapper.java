@@ -43,6 +43,7 @@ public interface TbCategoryMapper
      */
     public int updateTbCategory(TbCategory tbCategory);
 
+    int updateTbCategoryInOut(TbCategory tbCategory);
     /**
      * 删除category
      * 

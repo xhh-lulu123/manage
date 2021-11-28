@@ -44,13 +44,17 @@ public interface ITbCategoryService
      */
     public int updateTbCategory(TbCategory tbCategory) throws Exception;
 
+    public int updateTbCategoryTotal(TbCategory tbCategory);
+
+    int updateTbCategoryInOut(TbCategory tbCategory);
+
     /**
      * 批量删除category
      * 
      * @param ids 需要删除的category主键集合
      * @return 结果
      */
-    public int deleteTbCategoryByIds(String ids);
+    public int deleteTbCategoryByIds(String ids) throws Exception;
 
     /**
      * 删除category信息

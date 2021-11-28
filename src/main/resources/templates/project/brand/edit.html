@@ -18,28 +18,26 @@
             <label class="col-sm-3 control-label">类别名称：</label>
 <!--            <input name="categoryName" th:field="*{categoryName}" type="text">-->
             <div class="col-sm-8">
-                <select name="categoryId" class="form-control" th:with="type=${@categoryService.selectTbCategoryList(null)}" >
-                    <option th:each="category : ${type}" th:text="${category.name}" th:value="${category.id}" th:selected = "${category.id eq nowid}"></option>
-                </select>
+                <input required name="categoryId" th:field="*{categoryName}" class="form-control" type="text" readonly="readonly">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">名称：</label>
             <div class="col-sm-8">
-                <input name="name" th:field="*{name}" class="form-control" type="text">
+                <input required name="name" th:field="*{name}" class="form-control" type="text">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">单位：</label>
             <div class="col-sm-8">
-                <input name="unit" th:field="*{unit}" class="form-control" type="text">
+                <input required name="unit" th:field="*{unit}" class="form-control" type="text">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">位置名称：</label>
             <div class="col-sm-8">
                 <div class="input-group">
-                    <input class="form-control" name="shelvesName" onclick="selectShelvesTree()" id="treeName" type="text" th:field="*{shelvesName}">
+                    <input required class="form-control" name="shelvesName" onclick="selectShelvesTree()" id="treeName" type="text" th:field="*{shelvesName}">
                     <span class="input-group-addon"><i class="fa fa-search"></i></span>
                 </div>
             </div>
@@ -53,13 +51,13 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">流水总数：</label>
             <div class="col-sm-8">
-                <input name="inout" th:field="*{inout}" class="form-control" type="text">
+                <input name="inout" th:field="*{inout}" class="form-control" type="text" readonly="readonly">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">剩余总数：</label>
             <div class="col-sm-8">
-                <input name="surplus" th:field="*{surplus}" class="form-control" type="text">
+                <input name="surplus" th:field="*{surplus}" class="form-control" type="text" readonly="readonly">
             </div>
         </div>
         <div class="form-group">

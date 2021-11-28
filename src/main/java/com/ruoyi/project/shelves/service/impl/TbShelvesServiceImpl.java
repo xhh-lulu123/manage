@@ -40,6 +40,11 @@ public class TbShelvesServiceImpl implements ITbShelvesService
         return tbShelvesMapper.selectTbShelvesById(id);
     }
 
+    @Override
+    public TbShelves selectTbShelvesByName(String name) {
+        return tbShelvesMapper.selectTbShelvesByName(name);
+    }
+
     /**
      * 查询shelves列表
      * 
@@ -63,12 +68,14 @@ public class TbShelvesServiceImpl implements ITbShelvesService
     {
         TbShelves shelves = tbShelvesMapper.selectTbShelvesById(tbShelves.getParentId());
         // 如果父节点不为"正常"状态,则不允许新增子节点
-        if (!UserConstants.DEPT_NORMAL.equals(shelves.getStatus()))
+        if (shelves!=null && !UserConstants.DEPT_NORMAL.equals(shelves.getStatus()))
         {
             throw new ServiceException("位置停用，不允许新增");
         }
         tbShelves.setCreateBy(ShiroUtils.getLoginName());
-        tbShelves.setAncestors(shelves.getAncestors() + "," + tbShelves.getParentId());
+        if (shelves!=null){
+            tbShelves.setAncestors(shelves.getAncestors() + "," + tbShelves.getParentId());
+        }
         tbShelves.setCreateTime(DateUtils.getNowDate());
         return tbShelvesMapper.insertTbShelves(tbShelves);
     }

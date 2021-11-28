@@ -32,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null "> and update_time = #{updateTime}</if>
             <if test="remark != null  and remark != ''"> and remark = #{remark}</if>
         </where>
+        order by name
     </select>
     
     <select id="selectTbCategoryById" parameterType="String" resultMap="TbCategoryResult">
@@ -42,8 +43,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectTbCategoryByName" parameterType="String" resultMap="TbCategoryResult">
         <include refid="selectTbCategoryVo"/>
         where name = #{name}
-        <if test="name!=null and name !=''">
-            id not in (#{id})
+        <if test="id!=null and id !=''">
+           and id not in (#{id})
         </if>
     </select>
         
@@ -87,6 +88,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+    <update id="updateTbCategoryInOut" parameterType="TbCategory">
+        update tb_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inout != null">`inout` = #{inout},</if>
+            <if test="surplus != null">surplus = #{surplus},</if>
         </trim>
         where id = #{id}
     </update>

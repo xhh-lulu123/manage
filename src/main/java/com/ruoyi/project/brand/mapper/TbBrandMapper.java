@@ -12,6 +12,12 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface TbBrandMapper 
 {
+
+    long selectNumByCategoryId(String cagtegoryId);
+
+    long selectTakeNumByCategoryId(String cagtegoryId);
+
+    long selectCountByCategoryId(String cagtegoryId);
     /**
      * 查询brand
      * 
@@ -48,6 +54,8 @@ public interface TbBrandMapper
      * @return 结果
      */
     public int updateTbBrand(TbBrand tbBrand);
+
+    public int updateTbBrandInOut(TbBrand tbBrand);
 
     /**
      * 删除brand

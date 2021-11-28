@@ -146,8 +146,7 @@ public class TbBrandController extends BaseController
     @Log(title = "brand", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
-    public AjaxResult remove(String ids)
-    {
+    public AjaxResult remove(String ids) throws Exception {
         return toAjax(tbBrandService.deleteTbBrandByIds(ids));
     }
 

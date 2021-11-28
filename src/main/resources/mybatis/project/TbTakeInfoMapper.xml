@@ -22,6 +22,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, brand_id, take_by, take_time, take_num, take_to, create_by, create_time, update_by, update_time, remark from tb_take_info
     </sql>
 
+    <select id="selectTakeNumByBrandId" resultType="long">
+        select ifnull(sum(take_num),0) from tb_take_info where brand_id = #{brandId}
+    </select>
+
     <select id="selectTbTakeInfoList" parameterType="TbTakeInfo" resultMap="TbTakeInfoResult">
         select ti.id, ti.brand_id, ti.take_by, ti.take_time, ti.take_num, ti.take_to,
         ti.create_by, ti.create_time, ti.update_by, ti.update_time, ti.remark,
@@ -32,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join tb_category tc on tc.id = tb.category_id
         <where>
             <if test="categoryId != null  and categoryId != ''"> and tb.category_id = #{categoryId}</if>
+            <if test="brandId != null  and brandId != ''"> and ti.brand_id = #{brandId}</if>
             <if test="brandName != null  and brandName != ''"> and tb.name = #{brandName}</if>
             <if test="takeBy != null  and takeBy != ''"> and take_by like concat('%', #{takeBy}, '%')</if>
             <if test="beginTime != null "> and take_time &gt;= #{beginTime}</if>
@@ -42,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND (tb.shelves_id = #{shelvesId} OR tb.shelves_id IN ( SELECT t.id FROM tb_shelves t WHERE FIND_IN_SET (#{shelvesId},ancestors) ))
             </if>
         </where>
+        order by tc.name,tb.name,ti.take_time desc
     </select>
     
     <select id="selectTbTakeInfoById" parameterType="String" resultMap="TbTakeInfoResult">

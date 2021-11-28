@@ -1,16 +1,19 @@
 package com.ruoyi.project.category.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.security.ShiroUtils;
 import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.project.brand.domain.TbBrand;
+import com.ruoyi.project.brand.service.ITbBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.category.mapper.TbCategoryMapper;
 import com.ruoyi.project.category.domain.TbCategory;
 import com.ruoyi.project.category.service.ITbCategoryService;
 import com.ruoyi.common.utils.text.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * categoryService业务层处理
@@ -23,6 +26,8 @@ public class TbCategoryServiceImpl implements ITbCategoryService
 {
     @Autowired
     private TbCategoryMapper tbCategoryMapper;
+    @Autowired
+    private ITbBrandService brandService;
 
     /**
      * 查询category
@@ -77,6 +82,16 @@ public class TbCategoryServiceImpl implements ITbCategoryService
         return tbCategoryMapper.updateTbCategory(tbCategory);
     }
 
+    @Override
+    public int updateTbCategoryTotal(TbCategory tbCategory) {
+        return tbCategoryMapper.updateTbCategory(tbCategory);
+    }
+
+    @Override
+    public int updateTbCategoryInOut(TbCategory tbCategory) {
+        return tbCategoryMapper.updateTbCategoryInOut(tbCategory);
+    }
+
     /**
      * 批量删除category
      * 
@@ -84,8 +99,17 @@ public class TbCategoryServiceImpl implements ITbCategoryService
      * @return 结果
      */
     @Override
-    public int deleteTbCategoryByIds(String ids)
-    {
+    public int deleteTbCategoryByIds(String ids) throws Exception {
+        List<String> idList = Arrays.asList(Convert.toStrArray(ids));
+        for (String id : idList) {
+            TbBrand brand = new TbBrand();
+            brand.setCategoryId(id);
+            List<TbBrand> tbBrands = brandService.selectTbBrandList(brand);
+            if (tbBrands!=null && tbBrands.size()>0){
+                TbCategory category = selectTbCategoryById(id);
+                throw new Exception(category.getName()+"被引用，请先删除"+category.getName()+"下的物品");
+            }
+        }
         return tbCategoryMapper.deleteTbCategoryByIds(Convert.toStrArray(ids));
     }
 
@@ -103,7 +127,7 @@ public class TbCategoryServiceImpl implements ITbCategoryService
 
     @Override
     public TbCategory selectTbCategoryByName(TbCategory category) {
-        return null;
+        return tbCategoryMapper.selectTbCategoryByName(category);
     }
 
     public void checkName(TbCategory category) throws Exception {

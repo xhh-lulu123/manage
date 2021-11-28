@@ -11,6 +11,10 @@ import com.ruoyi.project.brand.domain.TbBrand;
  * @date 2021-11-21
  */
 public interface ITbBrandService {
+
+    long selectNumByCategoryId(String cagtegoryId);
+
+    long selectTakeNumByCategoryId(String cagtegoryId);
     /**
      * 查询brand
      *
@@ -55,13 +59,15 @@ public interface ITbBrandService {
      */
     public int updateTbBrand(TbBrand tbBrand) throws Exception;
 
+    public int updateTbBrandInOut(TbBrand tbBrand);
+
     /**
      * 批量删除brand
      *
      * @param ids 需要删除的brand主键集合
      * @return 结果
      */
-    public int deleteTbBrandByIds(String ids);
+    public int deleteTbBrandByIds(String ids) throws Exception;
 
     /**
      * 删除brand信息

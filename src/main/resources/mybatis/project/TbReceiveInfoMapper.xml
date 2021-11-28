@@ -33,6 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join tb_category tc on tc.id = tb.category_id
         <where>
             <if test="categoryId != null  and categoryId != ''"> and tb.category_id = #{categoryId}</if>
+            <if test="brandId != null  and brandId != ''"> and ti.brand_id = #{brandId}</if>
             <if test="brandName != null  and brandName != ''"> and tb.name = #{brandName}</if>
             <if test="receiveBy != null  and receiveBy != ''"> and receive_by = #{receiveBy}</if>
             <if test="beginTime != null "> and take_time &gt;= #{beginTime}</if>
@@ -43,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 AND (tb.shelves_id = #{shelvesId} OR tb.shelves_id IN ( SELECT t.id FROM tb_shelves t WHERE FIND_IN_SET (#{shelvesId},ancestors) ))
             </if>
         </where>
+        order by tc.name, tb.name,ti.receive_time desc
     </select>
     
     <select id="selectTbReceiveInfoById" parameterType="String" resultMap="TbReceiveInfoResult">
@@ -85,7 +87,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
          </trim>
     </insert>
-    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+
+    <select id="selectNumByBrandId" resultType="Long">
+        select ifnull(sum(receive_num),0) receiveNum from tb_receive_info where brand_id = #{brandId}
+    </select>
+    <insert id="insertBatch">
         insert into tb_receive_info(id,brand_id, receive_by, receive_time, receive_num, receive_to, create_by, create_time, update_by, update_time, remark)
         values
         <foreach collection="entities" item="entity" separator=",">
